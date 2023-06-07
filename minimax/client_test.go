@@ -7,7 +7,10 @@ import (
 )
 
 func getTestClient() (*Client, error) {
-	return New(WithApiToken(os.Getenv("TEST_MINIMAX_API_TOKEN")))
+	return New(
+		WithApiToken(os.Getenv("TEST_MINIMAX_API_TOKEN")),
+		WithGroupId(os.Getenv("TEST_MINIMAX_GROUP_ID")),
+	)
 }
 
 func TestNew(t *testing.T) {

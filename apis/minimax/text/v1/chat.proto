@@ -25,7 +25,7 @@ message RoleMeta {
 message ChatCompletionsRequest {
   //目前只能取以下一个值
   //abab5-chat
-  string Model = 1;
+  string model = 1;
   // 否 对回复添加情绪预测。注意，当with_emotion=true，且请求上下文（输入和输出文本）长时，请求会显著变慢，达到数秒。
   bool with_emotion = 2;
   // 否 	是否以流式接口的形式返回数据，默认false。

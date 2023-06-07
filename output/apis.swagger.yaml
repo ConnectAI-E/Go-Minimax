@@ -71,7 +71,7 @@ definitions:
   v1ChatCompletionsRequest:
     type: object
     properties:
-      Model:
+      model:
         type: string
         title: |-
           目前只能取以下一个值

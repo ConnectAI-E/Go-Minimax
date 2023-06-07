@@ -12,17 +12,23 @@ const minimaxBaseUrl = "https://api.minimax.chat"
 type Client struct {
 	client   *req.Client
 	apiToken string
+	groupId  string
 }
 
 func New(opts ...Option) (*Client, error) {
 	cli := &Client{
 		client: req.C().SetBaseURL(minimaxBaseUrl),
 	}
+	//curl --location "https://api.minimax.chat/v1/text/chatcompletion?GroupId=${group_id}" \
 
 	cli.client.OnBeforeRequest(func(client *req.Client,
 		req *req.Request) error {
 		if len(cli.apiToken) > 0 {
 			req.SetHeader("Authorization", cli.apiToken)
+		}
+		req.SetHeader("Content-Type", "application/json")
+		if len(cli.groupId) > 0 {
+			req.SetQueryParam("GroupId", cli.groupId)
 		}
 		return nil
 	}).OnAfterResponse(func(client *req.Client, resp *req.Response) error {

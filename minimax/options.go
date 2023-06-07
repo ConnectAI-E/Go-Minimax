@@ -13,3 +13,23 @@ func WithApiToken(token string) Option {
 		return nil
 	}
 }
+
+func WithBaseUrl(url string) Option {
+	return func(cli *Client) error {
+		if len(url) == 0 {
+			return errors.New("base url can not empty")
+		}
+		cli.client.SetBaseURL(url)
+		return nil
+	}
+}
+
+func WithGroupId(groupId string) Option {
+	return func(cli *Client) error {
+		if len(groupId) == 0 {
+			return errors.New("group id can not empty")
+		}
+		cli.groupId = groupId
+		return nil
+	}
+}
