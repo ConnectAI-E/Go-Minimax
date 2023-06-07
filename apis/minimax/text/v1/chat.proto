@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package minimax.text.v1;
+
+option go_package = "github.com/ConnectAI-E/go-minimax/gen/go/minimax/text/v1;text";
+option java_multiple_files = true;
+option java_outer_classname = "minimaxProto";
+option java_package = "com.qiniai.minimax.text.v1";
+
+
+message Message {
+  // 当前支持以下：
+  // USER: 表示用户
+  // BOT: 表示对话助手
+  string sender_type = 1;
+  // 对话内容，不能为空。
+  string text = 2;
+}
+
+message RoleMeta {
+  string user_name = 1;
+  string bot_name = 2;
+}
+
+message ChatCompletionsRequest {
+  //目前只能取以下一个值
+  //abab5-chat
+  string Model = 1;
+  // 否 对回复添加情绪预测。注意，当with_emotion=true，且请求上下文（输入和输出文本）长时，请求会显著变慢，达到数秒。
+  bool with_emotion = 2;
+  // 否 	是否以流式接口的形式返回数据，默认false。
+  bool stream = 3;
+  //是否通过流式分批返回结果。如果设置为true，结果分批返回，以一个换行为分割符；若希望使用标准SSE响应格式，可以设置use_standard_sse参数为true。默认false
+  bool use_standard_sse = 4;
+  //生成多少个结果；不设置默认为1，最大不超过4。 由于beam_width生成多个结果，会消耗更多token。 默认1
+  int32 beam_width = 5;
+  // 对话背景、人物或功能设定 长度上限为4096个token，不可为空
+  string prompt = 6;
+  // 	对话上下文信息。说明："user_name": "我", "bot_name": "专家"
+  RoleMeta role_meta = 7;
+  // 是 	聊天上下文信息。说明：
+  // （1）messages成员不能为空，1个成员表示单轮对话，多个成员表示多轮对话。
+  // （2）最后一个message为当前请求的信息，前面的message为历史对话信息。
+  // （3）必须为奇数个成员，成员中message的role必须依次为user、assistant。
+  // （4）最后一个message的content长度（即此轮对话的问题）不能超过2000个字符；如果messages中content总长度大于2000字符，系统会依次遗忘最早的历史会话，直到content的总长度不超过2000个字符。
+  repeated Message messages = 8;
+  float temperature = 9;
+  float top_p = 10;
+  //    对输出中易涉及隐私问题的文本信息进行脱敏，目前包括但不限于邮箱、域名、链接、证件号、家庭住址等，默认false，即开启脱敏 默认false
+  bool skip_info_mask = 11;
+}
+
+message Choice {
+  //文本结果
+  string text = 1;
+  //排名
+  int64 index = 2;
+  // 分数
+  int64 logprobes = 3;
+  //结束原因，枚举值
+  //stop：API返回了模型生成的完整结果
+  //length：模型生成结果超过tokens_to_generate的长度，内容被截断
+  string finish_reason = 4;
+  //回复文本情绪预测
+  //取值为以下八者其一 伤心 尴尬 开心 惊讶 愤怒 慌张 疑惑 自然
+  string emotion = 5;
+  //当request.stream为true，处于流式模式下，回复文本通过delta给出
+  string delta = 6;
+}
+
+message Usage {
+  //消耗tokens总数，包括输入和输出；具体计算方式为输入tokens + 最大输出tokens x beam_width。
+  //假设beam_width为2，输入tokens为100，输出结果分别为20tokens和30tokens，最终消耗160tokens
+  int64 total_tokens = 1;
+}
+
+message BaseResponse {
+  //状态码
+//      1000，未知错误
+//      1001，超时
+//      1002，触发限流
+//      1004，鉴权失败
+//      1008，余额不足
+//      1013，服务内部错误
+//      1027，输出内容严重违规
+//      2013，输入格式信息不正常
+  int64 status_code = 1;
+  //错误详情
+  string status_msg = 2;
+}
+
+message ChatCompletionsResponse {
+  //请求发起时间
+  int64 created = 1;
+  //请求指定的模型
+  string model = 2;
+  //推荐的最好结果
+  string reply = 3;
+  //所有结果
+  repeated Choice choices = 4;
+  //tokens数使用情况
+  Usage usage = 5;
+  //输入命中敏感词
+  bool input_sensitive = 6;
+  //输出命中敏感词
+  bool output_sensitive = 7;
+  //错误状态码和详情
+  BaseResponse base_resp = 8;
+
+}

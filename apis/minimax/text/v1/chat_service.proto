@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package minimax.text.v1;
+
+import "minimax/text/v1/chat.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+
+option go_package = "github.com/ConnectAI-E/go-minimax/gen/go/minimax/text/v1;text";
+option java_multiple_files = true;
+option java_outer_classname = "minimaxProto";
+option java_package = "com.qiniai.minimax.text.v1";
+
+service MinimaxService {
+  rpc ChatCompletions(ChatCompletionsRequest) returns (ChatCompletionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/text/chatcompletion"
+      body: "*"
+    };
+    option (google.api.method_signature) = "*";
+  }
+}

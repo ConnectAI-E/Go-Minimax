@@ -6,3 +6,5 @@
 
 ## MINIMAX-SDK
 > 大语言模型 MiniMax API
+
+[😎点击查看官方文档](https://www.yuque.com/minimax/api)
