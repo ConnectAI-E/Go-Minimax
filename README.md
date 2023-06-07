@@ -19,7 +19,7 @@
 
 ### 使用方法
 
-1. 访问 https://api.minimax.chat/document/guides/example 并创建应用。
+1. 访问 https://api.minimax.chat/document/guides/example 并创建秘钥。
 2. 取 groupID 和 API_token
 3. 使用 New 方法并根据传参说明生成 client。
 
@@ -32,14 +32,14 @@ import (
 	"context"
 	"fmt"
 	"github.com/ConnectAI-E/go-minimax"
-    textv1 "github.com/ConnectAI-E/go-minimax/text/v1"
+	textv1 "github.com/ConnectAI-E/go-minimax/text/v1"
 )
 
 //init client
 
 func main() {
 	ctx := context.Background()
-	client, _ := baidubce.New(
+	client, _ := minimax.New(
 		WithApiToken(os.Getenv("TEST_MINIMAX_API_TOKEN")),
 		WithGroupId(os.Getenv("TEST_MINIMAX_GROUP_ID")),
 		)
