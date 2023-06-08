@@ -19,9 +19,9 @@
 
 ### 使用方法
 
-1. 访问 https://api.minimax.chat/document/guides/example 并创建秘钥。
-2. 取 groupID 和 API_token
-3. 使用 New 方法并根据传参说明生成 client。
+1. 访问 [MiniMax](https://api.minimax.chat/document/guides/example) 管理后台。
+2. 获取取 [groupID](https://api.minimax.chat/basic-information) 和 [API_token](https://api.minimax.chat/basic-information/interface-key)
+3. 参考下面示例
 
 ### 示例
 
