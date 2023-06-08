@@ -31,22 +31,24 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/ConnectAI-E/go-minimax"
-	textv1 "github.com/ConnectAI-E/go-minimax/text/v1"
+	"os"
+	textv1 "github.com/ConnectAI-E/go-minimax/gen/go/minimax/text/v1"
+	"github.com/ConnectAI-E/go-minimax/minimax"
 )
 
 //init client
 
 func main() {
+
 	ctx := context.Background()
 	client, _ := minimax.New(
-		WithApiToken(os.Getenv("TEST_MINIMAX_API_TOKEN")),
-		WithGroupId(os.Getenv("TEST_MINIMAX_GROUP_ID")),
-		)
+		minimax.WithApiToken(os.Getenv("TEST_MINIMAX_API_TOKEN")),
+		minimax.WithGroupId(os.Getenv("TEST_MINIMAX_GROUP_ID")),
+	)
 
 	//chat
 	req := &textv1.ChatCompletionsRequest{
-		Messages: []*ai_customv1.Message{
+		Messages: []*textv1.Message{
 			{
 				SenderType: "USER",
 				Text:       "hi~",
@@ -57,7 +59,7 @@ func main() {
 	}
 	res, _ := client.ChatCompletions(ctx, req)
 
-	fmt.Println(res.Result) // output: 嗨！有什么我可以帮助你的吗？
+	fmt.Println(res.Choices) // output: 你好！有什么我可以帮助你的吗？
 }
 
 ```
