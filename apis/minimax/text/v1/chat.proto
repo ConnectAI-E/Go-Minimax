@@ -50,6 +50,7 @@ message ChatCompletionsRequest {
   bool skip_info_mask = 11;
 }
 
+
 message Choice {
   //文本结果
   string text = 1;

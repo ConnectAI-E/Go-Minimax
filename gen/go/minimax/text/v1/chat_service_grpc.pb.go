@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MinimaxService_ChatCompletions_FullMethodName = "/minimax.text.v1.MinimaxService/ChatCompletions"
+	MinimaxService_ChatCompletions_FullMethodName      = "/minimax.text.v1.MinimaxService/ChatCompletions"
+	MinimaxService_ChatCompletionStream_FullMethodName = "/minimax.text.v1.MinimaxService/ChatCompletionStream"
 )
 
 // MinimaxServiceClient is the client API for MinimaxService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MinimaxServiceClient interface {
 	ChatCompletions(ctx context.Context, in *ChatCompletionsRequest, opts ...grpc.CallOption) (*ChatCompletionsResponse, error)
+	ChatCompletionStream(ctx context.Context, in *ChatCompletionsRequest, opts ...grpc.CallOption) (MinimaxService_ChatCompletionStreamClient, error)
 }
 
 type minimaxServiceClient struct {
@@ -46,11 +48,44 @@ func (c *minimaxServiceClient) ChatCompletions(ctx context.Context, in *ChatComp
 	return out, nil
 }
 
+func (c *minimaxServiceClient) ChatCompletionStream(ctx context.Context, in *ChatCompletionsRequest, opts ...grpc.CallOption) (MinimaxService_ChatCompletionStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &MinimaxService_ServiceDesc.Streams[0], MinimaxService_ChatCompletionStream_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &minimaxServiceChatCompletionStreamClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type MinimaxService_ChatCompletionStreamClient interface {
+	Recv() (*ChatCompletionsResponse, error)
+	grpc.ClientStream
+}
+
+type minimaxServiceChatCompletionStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *minimaxServiceChatCompletionStreamClient) Recv() (*ChatCompletionsResponse, error) {
+	m := new(ChatCompletionsResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // MinimaxServiceServer is the server API for MinimaxService service.
 // All implementations should embed UnimplementedMinimaxServiceServer
 // for forward compatibility
 type MinimaxServiceServer interface {
 	ChatCompletions(context.Context, *ChatCompletionsRequest) (*ChatCompletionsResponse, error)
+	ChatCompletionStream(*ChatCompletionsRequest, MinimaxService_ChatCompletionStreamServer) error
 }
 
 // UnimplementedMinimaxServiceServer should be embedded to have forward compatible implementations.
@@ -59,6 +94,9 @@ type UnimplementedMinimaxServiceServer struct {
 
 func (UnimplementedMinimaxServiceServer) ChatCompletions(context.Context, *ChatCompletionsRequest) (*ChatCompletionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChatCompletions not implemented")
+}
+func (UnimplementedMinimaxServiceServer) ChatCompletionStream(*ChatCompletionsRequest, MinimaxService_ChatCompletionStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method ChatCompletionStream not implemented")
 }
 
 // UnsafeMinimaxServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -90,6 +128,27 @@ func _MinimaxService_ChatCompletions_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MinimaxService_ChatCompletionStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ChatCompletionsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MinimaxServiceServer).ChatCompletionStream(m, &minimaxServiceChatCompletionStreamServer{stream})
+}
+
+type MinimaxService_ChatCompletionStreamServer interface {
+	Send(*ChatCompletionsResponse) error
+	grpc.ServerStream
+}
+
+type minimaxServiceChatCompletionStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *minimaxServiceChatCompletionStreamServer) Send(m *ChatCompletionsResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // MinimaxService_ServiceDesc is the grpc.ServiceDesc for MinimaxService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +161,12 @@ var MinimaxService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MinimaxService_ChatCompletions_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "ChatCompletionStream",
+			Handler:       _MinimaxService_ChatCompletionStream_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "minimax/text/v1/chat_service.proto",
 }

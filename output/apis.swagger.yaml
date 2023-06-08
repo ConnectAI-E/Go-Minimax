@@ -29,6 +29,32 @@ paths:
             $ref: '#/definitions/v1ChatCompletionsRequest'
       tags:
         - MinimaxService
+  /v1/text/chatcompletion-stream:
+    post:
+      operationId: MinimaxService_ChatCompletionStream
+      responses:
+        "200":
+          description: A successful response.(streaming responses)
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/v1ChatCompletionsResponse'
+              error:
+                $ref: '#/definitions/rpcStatus'
+            title: Stream result of v1ChatCompletionsResponse
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1ChatCompletionsRequest'
+      tags:
+        - MinimaxService
 definitions:
   protobufAny:
     type: object

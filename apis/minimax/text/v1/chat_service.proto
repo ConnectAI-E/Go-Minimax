@@ -19,4 +19,11 @@ service MinimaxService {
     };
     option (google.api.method_signature) = "*";
   }
+  rpc ChatCompletionStream(ChatCompletionsRequest) returns (stream ChatCompletionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/text/chatcompletion-stream"
+      body: "*"
+    };
+    option (google.api.method_signature) = "*";
+  }
 }
