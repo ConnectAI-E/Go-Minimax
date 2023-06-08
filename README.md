@@ -7,7 +7,7 @@
 ## MINIMAX-SDK
 > 大语言模型 MiniMax API
 
-[😎点击查看官方文档](https://www.yuque.com/minimax/api)
+[😎点击查看官方文档](https://api.minimax.chat/)
 
 ### 功能及特点
 
