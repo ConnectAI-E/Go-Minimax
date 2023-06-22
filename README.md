@@ -16,6 +16,15 @@
 3. Embeddings 向量化接口
 4. T2A 文本转语音接口
 5. 无缝对接官方文档：单轮问答、历史记忆问答、流返回
+6. 支持Swagger文档 和 ApiFox 文档
+
+### Swagger 文档
+
+- [打开在线Swagger编辑器](https://editor.swagger.io/)
+- 导入[Swagger Api 文档](./output/apis.swagger.yaml)
+
+ <img width="800" alt="image" src="https://github.com/ConnectAI-E/Go-Minimax/assets/50035229/cafe6492-2375-4b6f-9dcf-e651c06aa94a">
+
 
 ### 使用方法
 
